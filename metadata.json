@@ -1,0 +1,5 @@
+{
+  "name": "AI Leet Speak Translator",
+  "description": "A beautiful and modern web application that automatically detects the language of your text and translates it into Leet Speak (1337) using the power of AI.",
+  "requestFramePermissions": []
+}
