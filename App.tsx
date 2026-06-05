@@ -107,6 +107,7 @@ const App: React.FC = () => {
       };
       setHistory(prevHistory => [newHistoryEntry, ...prevHistory.slice(0, 49)]);
       logService.addLog('info', 'Translation successful.', { detectedLanguage: result.detectedLanguage });
+      setCooldownTime(10);
       
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "An unknown error occurred.";
@@ -114,7 +115,6 @@ const App: React.FC = () => {
       logService.addLog('error', 'Translation failed.', { error: errorMessage });
     } finally {
       setIsLoading(false);
-      setCooldownTime(10);
       refreshLogs();
     }
   };
