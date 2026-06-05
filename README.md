@@ -43,6 +43,7 @@ Open the URL shown in the terminal (default `http://localhost:3000`).
 | `npm run dev` | Start dev server with API middleware |
 | `npm run build` | Production build |
 | `npm run preview` | Preview production build locally |
+| `npm test` | Run unit tests |
 
 ## Deployment (Vercel)
 
