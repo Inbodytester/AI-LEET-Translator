@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { LogEntry } from '../types';
 
 interface LogViewerModalProps {
@@ -16,6 +15,22 @@ const TrashIcon: React.FC = () => (
 );
 
 export const LogViewerModal: React.FC<LogViewerModalProps> = ({ isOpen, onClose, logs, onClearLogs }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
