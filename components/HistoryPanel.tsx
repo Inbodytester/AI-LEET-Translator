@@ -1,4 +1,5 @@
 import React from 'react';
+import { TrashIcon } from './icons/TrashIcon';
 import type { HistoryEntry } from '../types';
 
 interface HistoryPanelProps {
@@ -6,12 +7,6 @@ interface HistoryPanelProps {
   onItemClick: (entry: HistoryEntry) => void;
   onClear: () => void;
 }
-
-const TrashIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>
-);
 
 export const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onItemClick, onClear }) => {
     return (
@@ -42,7 +37,12 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onItemClick
                             className="p-3 bg-gray-100 dark:bg-gray-900/50 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/70 border border-transparent hover:border-cyan-500/50 transition-all duration-200"
                             role="button"
                             tabIndex={0}
-                            onKeyDown={(e) => e.key === 'Enter' && onItemClick(entry)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                onItemClick(entry);
+                              }
+                            }}
                             aria-label={`Select translation from ${new Date(entry.timestamp).toLocaleString()}`}
                         >
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title={entry.originalText}>{entry.originalText}</p>

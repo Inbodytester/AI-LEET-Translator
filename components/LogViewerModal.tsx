@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { TrashIcon } from './icons/TrashIcon';
 import type { LogEntry } from '../types';
 
 interface LogViewerModalProps {
@@ -8,13 +9,9 @@ interface LogViewerModalProps {
   onClearLogs: () => void;
 }
 
-const TrashIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>
-);
-
 export const LogViewerModal: React.FC<LogViewerModalProps> = ({ isOpen, onClose, logs, onClearLogs }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -24,6 +21,7 @@ export const LogViewerModal: React.FC<LogViewerModalProps> = ({ isOpen, onClose,
 
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown);
+    dialogRef.current?.focus();
 
     return () => {
       document.body.style.overflow = '';
@@ -37,13 +35,16 @@ export const LogViewerModal: React.FC<LogViewerModalProps> = ({ isOpen, onClose,
     <div 
         className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4"
         onClick={onClose}
+        role="presentation"
+    >
+      <div 
+        ref={dialogRef}
+        tabIndex={-1}
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-3xl h-[80vh] flex flex-col outline-none"
+        onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="log-viewer-title"
-    >
-      <div 
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-3xl h-[80vh] flex flex-col"
-        onClick={e => e.stopPropagation()}
       >
         <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 id="log-viewer-title" className="text-xl font-bold text-cyan-500 dark:text-cyan-400">Application Logs</h2>
