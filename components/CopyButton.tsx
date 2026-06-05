@@ -19,12 +19,18 @@ const CheckIcon: React.FC = () => (
 
 export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
 
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(textToCopy).then(() => {
+  const handleCopy = useCallback(async () => {
+    setCopyError(false);
+    try {
+      await navigator.clipboard.writeText(textToCopy);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
-    });
+    } catch {
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 2000);
+    }
   }, [textToCopy]);
 
   return (
@@ -33,11 +39,14 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy }) => {
       className={`px-3 py-1.5 flex items-center space-x-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 ${
         isCopied
           ? 'bg-green-600 text-white focus:ring-green-500'
-          : 'bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 focus:ring-cyan-500'
+          : copyError
+            ? 'bg-red-600 text-white focus:ring-red-500'
+            : 'bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 focus:ring-cyan-500'
       }`}
+      aria-label={copyError ? 'Copy failed' : isCopied ? 'Copied to clipboard' : 'Copy translation to clipboard'}
     >
       {isCopied ? <CheckIcon /> : <ClipboardIcon />}
-      <span>{isCopied ? 'Copied!' : 'Copy'}</span>
+      <span>{isCopied ? 'Copied!' : copyError ? 'Failed' : 'Copy'}</span>
     </button>
   );
 };
