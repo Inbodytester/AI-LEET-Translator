@@ -46,10 +46,16 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    refreshLogs();
-    logService.addLog('info', 'Application session started.');
-    refreshLogs();
-  }, [refreshLogs]);
+    const SESSION_LOG_KEY = 'appSessionLogged';
+    if (!sessionStorage.getItem(SESSION_LOG_KEY)) {
+      logService.addLog('info', 'Application session started.');
+      sessionStorage.setItem(SESSION_LOG_KEY, '1');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLogModalOpen) refreshLogs();
+  }, [isLogModalOpen, refreshLogs]);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -78,7 +84,6 @@ const App: React.FC = () => {
     setTheme(prevTheme => {
         const newTheme = prevTheme === 'light' ? 'dark' : 'light';
         logService.addLog('info', `Theme changed to ${newTheme}.`);
-        refreshLogs();
         return newTheme;
     });
   };
@@ -91,7 +96,6 @@ const App: React.FC = () => {
     setTranslationResult(null);
     setInputText(text);
     logService.addLog('info', 'Translation started.', { text: text.length > 50 ? text.substring(0, 50) + '...' : text });
-    refreshLogs();
 
     try {
       const result = await translateToLeetSpeak(text);
@@ -113,7 +117,6 @@ const App: React.FC = () => {
       logService.addLog('error', 'Translation failed.', { error: errorMessage });
     } finally {
       setIsLoading(false);
-      refreshLogs();
     }
   };
   
@@ -126,13 +129,11 @@ const App: React.FC = () => {
     setError(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     logService.addLog('info', 'History item loaded from history.', { id: entry.id });
-    refreshLogs();
-  }, [refreshLogs]);
+  }, []);
 
   const handleClearHistory = () => {
       setHistory([]);
       logService.addLog('info', 'Translation history cleared.');
-      refreshLogs();
   };
 
   const handleViewLogs = () => setIsLogModalOpen(true);
