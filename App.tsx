@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { HistoryPanel } from './components/HistoryPanel';
@@ -30,7 +30,7 @@ const App: React.FC = () => {
     }
   });
   const [cooldownTime, setCooldownTime] = useState<number>(0);
-  const cooldownIntervalRef = useRef<number | null>(null);
+  const isCooldownActive = cooldownTime > 0;
 
   // State for logging
   const [isLogModalOpen, setIsLogModalOpen] = useState<boolean>(false);
@@ -60,21 +60,14 @@ const App: React.FC = () => {
   }, [history]);
   
   useEffect(() => {
-    if (cooldownTime > 0) {
-      cooldownIntervalRef.current = window.setInterval(() => {
-        setCooldownTime(prevTime => Math.max(0, prevTime - 1));
-      }, 1000);
-    } else if (cooldownTime <= 0 && cooldownIntervalRef.current) {
-      clearInterval(cooldownIntervalRef.current);
-      cooldownIntervalRef.current = null;
-    }
+    if (!isCooldownActive) return;
 
-    return () => {
-      if (cooldownIntervalRef.current) {
-        clearInterval(cooldownIntervalRef.current);
-      }
-    };
-  }, [cooldownTime]);
+    const intervalId = window.setInterval(() => {
+      setCooldownTime((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isCooldownActive]);
 
   const handleThemeToggle = () => {
     setTheme(prevTheme => {
