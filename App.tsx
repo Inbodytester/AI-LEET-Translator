@@ -8,6 +8,7 @@ import { LogViewerModal } from './components/LogViewerModal';
 import { translateToLeetSpeak } from './services/geminiService';
 import * as logService from './services/logService';
 import type { HistoryEntry, Theme, TranslationResult, LogEntry } from './types';
+import { parseHistoryEntries } from './utils/parseStorage';
 
 const isValidTheme = (value: string | null): value is Theme =>
   value === 'light' || value === 'dark';
@@ -27,9 +28,9 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<HistoryEntry[]>(() => {
     try {
       const savedHistory = localStorage.getItem('translationHistory');
-      return savedHistory ? JSON.parse(savedHistory) : [];
+      return savedHistory ? parseHistoryEntries(savedHistory) : [];
     } catch (e) {
-      console.error("Failed to parse history from localStorage", e);
+      console.error('Failed to parse history from localStorage', e);
       return [];
     }
   });

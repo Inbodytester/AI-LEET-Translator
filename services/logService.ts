@@ -1,5 +1,6 @@
 
 import type { LogEntry } from '../types';
+import { parseLogEntries } from '../utils/parseStorage';
 
 const LOGS_STORAGE_KEY = 'appLogs';
 const MAX_LOG_ENTRIES = 100;
@@ -7,7 +8,7 @@ const MAX_LOG_ENTRIES = 100;
 export const getLogs = (): LogEntry[] => {
   try {
     const savedLogs = localStorage.getItem(LOGS_STORAGE_KEY);
-    return savedLogs ? JSON.parse(savedLogs) : [];
+    return savedLogs ? parseLogEntries(savedLogs) : [];
   } catch (e) {
     console.error("Failed to parse logs from localStorage", e);
     return [];
