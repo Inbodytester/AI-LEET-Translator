@@ -1,5 +1,5 @@
 {
-  "name": "AI Leet Speak Translator",
-  "description": "A beautiful and modern web application that automatically detects the language of your text and translates it into Leet Speak (1337) using the power of AI.",
+  "name": "AI L33T Translator",
+  "description": "Open-source red-team lab: encode prompts in leet speak (1337) to stress-test LLM safety filters, compliance guardrails, and jailbreak resistance with Google Gemini.",
   "requestFramePermissions": []
 }
