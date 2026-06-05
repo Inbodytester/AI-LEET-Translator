@@ -40,6 +40,7 @@ export const TranslatorCard: React.FC<TranslatorCardProps> = ({
           <textarea
             id="inputText"
             rows={5}
+            maxLength={4000}
             className="w-full p-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-400 dark:focus:border-cyan-400 transition-colors duration-200"
             placeholder="Hello world, how are you today?"
             value={inputText}
