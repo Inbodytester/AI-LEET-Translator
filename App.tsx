@@ -9,11 +9,15 @@ import { translateToLeetSpeak } from './services/geminiService';
 import * as logService from './services/logService';
 import type { HistoryEntry, Theme, TranslationResult, LogEntry } from './types';
 
+const isValidTheme = (value: string | null): value is Theme =>
+  value === 'light' || value === 'dark';
+
 const App: React.FC = () => {
   const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return savedTheme || (prefersDark ? 'dark' : 'light');
+    const savedTheme = localStorage.getItem('theme');
+    if (isValidTheme(savedTheme)) return savedTheme;
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    return prefersDark ? 'dark' : 'light';
   });
 
   const [inputText, setInputText] = useState<string>('');
