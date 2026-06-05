@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+
 # Environment variables (never commit secrets)
 .env
 .env.*

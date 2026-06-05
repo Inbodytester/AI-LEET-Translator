@@ -44,6 +44,7 @@ Open the URL shown in the terminal (default `http://localhost:3000`).
 | `npm run build` | Production build |
 | `npm run preview` | Preview production build locally |
 | `npm test` | Run unit tests |
+| `npm run test:e2e` | Run Playwright end-to-end tests |
 
 ## Deployment (Vercel)
 
