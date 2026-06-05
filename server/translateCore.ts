@@ -103,6 +103,7 @@ export const translateToLeetSpeak = async (text: string): Promise<TranslationRes
 };
 
 export const getErrorStatus = (message: string): number => {
+  if (message.includes('Too many requests')) return 429;
   if (message.includes('not configured')) return 503;
   if (
     message.includes('too long') ||

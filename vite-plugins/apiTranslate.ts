@@ -1,5 +1,5 @@
 import type { Plugin, Connect } from 'vite';
-import { translateToLeetSpeak, getErrorStatus } from '../server/translateCore';
+import { handleTranslateFromHeaders } from '../server/handleTranslate';
 
 const readBody = (req: Connect.IncomingMessage): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -23,15 +23,23 @@ export const apiTranslatePlugin = (): Plugin => ({
         const raw = await readBody(req);
         const body = raw ? JSON.parse(raw) : {};
         const text = typeof body?.text === 'string' ? body.text : '';
-        const result = await translateToLeetSpeak(text);
-        res.statusCode = 200;
+        const { status, body: responseBody, headers } = await handleTranslateFromHeaders(
+          text,
+          req.headers
+        );
+
+        res.statusCode = status;
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(result));
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Translation failed';
-        res.statusCode = getErrorStatus(message);
+        if (headers) {
+          for (const [key, value] of Object.entries(headers)) {
+            res.setHeader(key, value);
+          }
+        }
+        res.end(JSON.stringify(responseBody));
+      } catch {
+        res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ error: message }));
+        res.end(JSON.stringify({ error: 'Translation failed' }));
       }
     });
   },
