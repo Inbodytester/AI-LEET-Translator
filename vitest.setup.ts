@@ -24,4 +24,5 @@ vi.stubGlobal('sessionStorage', localStorageMock);
 
 beforeEach(() => {
   storage.clear();
+  document.body.innerHTML = '';
 });
